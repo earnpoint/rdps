@@ -1,0 +1,25 @@
+name: Deploy Windows VM on Azure
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create Windows VM
+      run: |
+        az vm create \
+          --resource-group MyResourceGroup \
+          --name MyWindowsVM \
+          --image Win2019Datacenter \
+          --admin-username azureuser \
+          --admin-password ${{ secrets.VM_PASSWORD }}
